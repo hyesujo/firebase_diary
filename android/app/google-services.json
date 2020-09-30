@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "424490080022",
+    "firebase_url": "https://letterdiary-41dae.firebaseio.com",
+    "project_id": "letterdiary-41dae",
+    "storage_bucket": "letterdiary-41dae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424490080022:android:f681ebf4fbbe180a46a237",
+        "android_client_info": {
+          "package_name": "com.jhs.flutter_3line_diary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "424490080022-7b3pj73lvb19fm5ahhtes2mti6pkkk60.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANneiWMk2UY8jDshkVxTNaRgr8dWtUJKk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "424490080022-7b3pj73lvb19fm5ahhtes2mti6pkkk60.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
