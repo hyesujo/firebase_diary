@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
 
   getFCMToken() async {
  String token = await  _firebaseMessaging.getToken();
- print('token - ${token}');
+ print('token - $token');
   }
 
   @override

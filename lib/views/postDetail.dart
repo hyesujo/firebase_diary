@@ -7,7 +7,10 @@ class PostDetail extends StatefulWidget {
   Post post;
   int index;
 
-  PostDetail({this.post, this.index});
+
+  PostDetail({
+    this.post,
+  this.index});
 
   @override
   _PostDetailState createState() => _PostDetailState();

@@ -34,14 +34,14 @@ class _TopicPageState extends State<TopicPage> {
                 ),
                 ),
               ),
-              ShowPost(),
+              showPost(),
             ],
           )
       ),
     );
   }
 
-  Widget ShowPost() {
+  Widget showPost() {
     return FutureBuilder(
       future:  _database.listPost(),
       builder: (context, snapshot) {
@@ -70,7 +70,7 @@ class _TopicPageState extends State<TopicPage> {
                       SizedBox(
                         height: 5,
                       ),
-                      ShowTag(post.tags)
+                      showTag(post.tags)
                       ],
                       )
                     ),
@@ -84,7 +84,7 @@ class _TopicPageState extends State<TopicPage> {
       },
     );
   }
-  Widget ShowTag(List<String> tags){
+  Widget showTag(List<String> tags){
     String text ='';
 
     for(var i=0; i < tags.length; i++){

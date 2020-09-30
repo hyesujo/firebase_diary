@@ -202,13 +202,13 @@ class _WritePageState extends State<WritePage> {
     var data =await _imagefile.readAsBytes();
     StorageUploadTask uploadTask = storageReference.putData(data);
     uploadTask.events.listen((event) {
-      print('upload event -${event}, ${event.snapshot.error}');
+      print('upload event -$event, ${event.snapshot.error}');
     });
 
    StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
 
    String url = await storageTaskSnapshot.ref.getDownloadURL();
-   print('url ${url}');
+   print('url $url');
 
    return url;
   }

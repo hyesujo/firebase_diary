@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_3line_diary/model/post.dart';
 import 'package:flutter_3line_diary/service/database.dart';
 import 'package:flutter_3line_diary/service/searchdiarydelegate.dart';
+import 'package:flutter_3line_diary/views/FuturebuiderDetail.dart';
 import 'package:flutter_3line_diary/views/postDetail.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -45,7 +46,6 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget buildGridView({List post}) {
-    List<Widget> item = buildItem(post);
     return GridView.count(
       childAspectRatio: 0.8,
       crossAxisCount: 3,
@@ -76,7 +76,7 @@ class _MainPageState extends State<MainPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Hero(
-                  tag: "${i}",
+                  tag: "$i",
                   child: Image.network(
                     posts.photoUrl,
                     width: 130,
@@ -134,40 +134,49 @@ class _MainPageState extends State<MainPage> {
              itemCount: posts.length,
              itemBuilder: (context,index) {
                Post post = posts[index];
-               return Card(
-                 child: Container(
-                   width: 100,
-                   height: 130,
-                   color: Colors.black12,
-                   child: Column(
-                     crossAxisAlignment: CrossAxisAlignment.start,
-                     children: [
-                       Image.network(post.photoUrl,
-                     width: 130,
-                     height: 90,
-                     fit: BoxFit.cover,
-                   ),
-                       Container(
-                         padding: EdgeInsets.symmetric(horizontal: 8),
-                         child: Text(
-                           post.title,
-                           maxLines: 1,
-                           style: GoogleFonts.nanumGothic(
-                             fontSize: 12,
-                           ),
-                         ),
-                       ),
-                       Flexible(
-                         child: Container(
+               return GestureDetector(
+                 onTap: () {
+                   Navigator.of(context).push(
+                     MaterialPageRoute(
+                       builder: (BuildContext context) => FutureBuilderDetail(post: post),
+                     ),
+                   );
+                 },
+                 child: Card(
+                   child: Container(
+                     width: 100,
+                     height: 130,
+                     color: Colors.black12,
+                     child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         Image.network(post.photoUrl,
+                       width: 130,
+                       height: 90,
+                       fit: BoxFit.cover,
+                     ),
+                         Container(
                            padding: EdgeInsets.symmetric(horizontal: 8),
                            child: Text(
-                             post.content,
-                             overflow: TextOverflow.fade,
-                             style: GoogleFonts.nanumGothic(fontSize: 12),
+                             post.title,
+                             maxLines: 1,
+                             style: GoogleFonts.nanumGothic(
+                               fontSize: 12,
+                             ),
                            ),
                          ),
-                       ),
-                     ],
+                         Flexible(
+                           child: Container(
+                             padding: EdgeInsets.symmetric(horizontal: 8),
+                             child: Text(
+                               post.content,
+                               overflow: TextOverflow.fade,
+                               style: GoogleFonts.nanumGothic(fontSize: 12),
+                             ),
+                           ),
+                         ),
+                       ],
+                     ),
                    ),
                  ),
                );
