@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3line_diary/model/post.dart';
 import 'package:flutter_3line_diary/service/database.dart';
+import 'package:flutter_3line_diary/ui/showtags.dart';
 
 class TopicPage extends StatefulWidget {
   @override
@@ -70,7 +71,7 @@ class _TopicPageState extends State<TopicPage> {
                       SizedBox(
                         height: 5,
                       ),
-                      showTag(post.tags)
+                      ShowTags(post.tags)
                       ],
                       )
                     ),
@@ -82,16 +83,6 @@ class _TopicPageState extends State<TopicPage> {
         }
         return Container();
       },
-    );
-  }
-  Widget showTag(List<String> tags){
-    String text ='';
-
-    for(var i=0; i < tags.length; i++){
-      text += "#${tags[i]}";
-    }
-    return Text(text,style: TextStyle(color: Colors.blue,
-    fontSize: 13),
     );
   }
 }

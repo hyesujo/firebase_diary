@@ -16,6 +16,16 @@ class Database {
   return posts;
   }
 
+  Future<List<Post>> listPostKeyword(String keyword) async{
+    QuerySnapshot snapshot = await _db.collection('posts').where('searchKeyword',arrayContains:keyword).limit(10).get();
+
+   List<DocumentSnapshot> docs = snapshot.docs;
+
+   List<Post> post = docs.map((DocumentSnapshot snapshot) => Post.fromMap(snapshot.data())).toList();
+
+   return post;
+  }
+
   Future addPost(Post post) async {
   return await  _db.collection('posts').doc('1000').set(post.toMap());
   }
