@@ -2,10 +2,14 @@
 
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_3line_diary/service/auth_service.dart';
+import 'package:flutter_3line_diary/views/homePage.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_3line_diary/main.dart';
 import 'package:flutter_3line_diary/model/post.dart';
 import 'package:flutter_3line_diary/service/database.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,27 +23,37 @@ class _WritePageState extends State<WritePage> {
 
   TextEditingController _titleCtrl = TextEditingController();
   TextEditingController _contentCtrl = TextEditingController();
-  TextEditingController _tagctrl = TextEditingController();
-
+  TextEditingController _tagCtrl = TextEditingController();
+  final Color pColor = Color(0xff3EBAA9);
   final ImagePicker _picker = ImagePicker();
-  PickedFile _imagefile;
+  PickedFile _imageFile;
+  var uuid = Uuid();
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   Database database = Database();
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+
     return Container(
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.black,
+            backgroundColor: pColor,
             elevation: 0.0,
-            title: Text('새 일기장 만들기'),
+            title: Text('새 일기장 만들기',
+            style: GoogleFonts.nanumGothic(
+              fontSize: 20
+            ),
+            ),
             centerTitle: true,
             leading: IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
                 Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (content)=>HomePage(page: 0)));
+                    .push(
+                    MaterialPageRoute(
+                    builder: (content)=>HomePage(page: 0)));
               },
             ),
             actions: [
@@ -86,12 +100,29 @@ class _WritePageState extends State<WritePage> {
                     height: 350,
                     color: Colors.black,
                     child: Center(
-                      child: _imagefile != null ? Image.file(
-                        File(_imagefile.path),)
-                          : infomessage(),
+                      child: _imageFile != null ? Image.file(
+                        File(_imageFile.path),)
+                          : infoMessage(),
                     ),
                   ),
                 ),
+                SizedBox(height: 5),
+                Container(
+                  width: size.width *1,
+                  height: size.height *0.06,
+                  child: RaisedButton(
+                      onPressed: (){
+                        submit();
+                      },
+                    color: Colors.deepPurple,
+                    child: Text("저장하기",
+                    style: GoogleFonts.nanumGothic(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18
+                    ),),
+                  ),
+                )
               ],
             ),
           )
@@ -103,11 +134,11 @@ class _WritePageState extends State<WritePage> {
     return Container(
                 margin: EdgeInsets.symmetric(horizontal: 12),
                 child: TextFormField(
-                  controller: _tagctrl,
+                  controller: _tagCtrl,
                   decoration: InputDecoration(
                       hintText: '#당신의 삶 태그를 입력해주세요',
                       hintStyle: TextStyle(
-                          color: Colors.blueAccent,
+                          color: pColor,
                           fontWeight: FontWeight.w300
                       ),
                   ),
@@ -118,7 +149,7 @@ class _WritePageState extends State<WritePage> {
               );
   }
 
-  Column infomessage() {
+  Column infoMessage() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -146,7 +177,7 @@ class _WritePageState extends State<WritePage> {
         duration: Duration(seconds: 2),)
         ..show(context);
     }
-    if (_tagctrl.text.length == 0) {
+    if (_tagCtrl.text.length == 0) {
       Flushbar(
         title: "안내 메세지",
         message: "태그를 적어주세요",
@@ -154,11 +185,13 @@ class _WritePageState extends State<WritePage> {
         duration: Duration(seconds: 2),)
         ..show(context);
     }
-     List<String> tags = getTag(_tagctrl.text);
+     List<String> tags = getTag(_tagCtrl.text);
+      String id = _auth.currentUser.uid;
       String content = _contentCtrl.text;
       String title = _titleCtrl.text;
       String photoUrl = await upLoad();
       Post post = Post(
+        id: id,
         title: title,
         content: content,
         photoUrl: photoUrl,
@@ -174,7 +207,8 @@ class _WritePageState extends State<WritePage> {
 
       Scaffold.of(context).showSnackBar(snackBar);
       Navigator.of(context).pop();
-      Navigator.of(context).push(MaterialPageRoute(builder: (content)=>HomePage(page: 1),
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (content)=>HomePage(page: 1),
       ),
       );
   }
@@ -189,7 +223,7 @@ class _WritePageState extends State<WritePage> {
 
 
   Future<String> upLoad() async {
-    if (_imagefile == null) {
+    if (_imageFile == null) {
       Flushbar(
         title:"안내 메세지",
         message: "이미지를 선택해주세요",
@@ -198,8 +232,8 @@ class _WritePageState extends State<WritePage> {
       )..show(context);
       return null;
     }
-    final StorageReference storageReference  = FirebaseStorage().ref().child('/forest/data.png');
-    var data =await _imagefile.readAsBytes();
+    final StorageReference storageReference  = FirebaseStorage().ref().child('forest/${uuid.v4()}');
+    var data =await _imageFile.readAsBytes();
     StorageUploadTask uploadTask = storageReference.putData(data);
     uploadTask.events.listen((event) {
       print('upload event -$event, ${event.snapshot.error}');
@@ -217,7 +251,7 @@ class _WritePageState extends State<WritePage> {
       PickedFile pickedFile =
       await _picker.getImage(source: ImageSource.gallery);
       setState(() {
-        _imagefile = pickedFile;
+        _imageFile = pickedFile;
       });
     }
   }

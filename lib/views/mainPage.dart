@@ -18,7 +18,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.deepPurple,
         elevation: 0.0,
         actions: [
           Container(
@@ -26,8 +26,8 @@ class _MainPageState extends State<MainPage> {
             child: IconButton(
               icon: Icon(
                 Icons.search,
-                color: Colors.black,
-                size: 32,
+                color: Colors.white,
+                size: 25,
               ),
               onPressed: (){
                 search();
@@ -36,8 +36,8 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
         title: Text(
-          '다이어리',
-          style: GoogleFonts.nanumGothic(color: Colors.black),
+          '오늘의 일기',
+          style: GoogleFonts.nanumGothic(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -59,18 +59,19 @@ class _MainPageState extends State<MainPage> {
     for (int i = 0; i < post.length; i++) {
       Post posts = post[i];
 
-      Widget w = GestureDetector(
+      Widget addWidget = GestureDetector(
         onTap: () {
           Navigator.of(context).push(
               MaterialPageRoute(
-            builder: (BuildContext context) => PostDetail(post: posts,index: i,),
+            builder: (BuildContext context) =>
+                PostDetail(post: posts,index: i),
           ),
           );
         },
         child: Card(
           child: Container(
             width: 100,
-            height: 130,
+            height: 100,
             color: Colors.black12,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +110,7 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
       );
-      widgets.add(w);
+      widgets.add(addWidget);
     }
     return widgets;
   }
@@ -127,7 +128,7 @@ class _MainPageState extends State<MainPage> {
          return GridView.builder(
              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                crossAxisCount: 3,
-               crossAxisSpacing: 5.0,
+               crossAxisSpacing: 3.0,
                mainAxisSpacing: 5.0,
                childAspectRatio: 0.8,
              ),
@@ -138,7 +139,8 @@ class _MainPageState extends State<MainPage> {
                  onTap: () {
                    Navigator.of(context).push(
                      MaterialPageRoute(
-                       builder: (BuildContext context) => FutureBuilderDetail(post: post),
+                       builder: (BuildContext context) =>
+                           FutureBuilderDetail(post: post),
                      ),
                    );
                  },
@@ -146,7 +148,7 @@ class _MainPageState extends State<MainPage> {
                    child: Container(
                      width: 100,
                      height: 130,
-                     color: Colors.black12,
+                     color: Colors.grey[200],
                      child: Column(
                        crossAxisAlignment: CrossAxisAlignment.start,
                        children: [
@@ -157,21 +159,29 @@ class _MainPageState extends State<MainPage> {
                      ),
                          Container(
                            padding: EdgeInsets.symmetric(horizontal: 8),
-                           child: Text(
-                             post.title,
-                             maxLines: 1,
-                             style: GoogleFonts.nanumGothic(
-                               fontSize: 12,
+                           child: Container(
+                             padding: EdgeInsets.only(top: 5),
+                             child: Text(
+                               post.title,
+                               maxLines: 1,
+                               style: GoogleFonts.nanumGothic(
+                                 fontSize: 12,
+                                 fontWeight: FontWeight.w500
+                               ),
                              ),
                            ),
                          ),
                          Flexible(
                            child: Container(
                              padding: EdgeInsets.symmetric(horizontal: 8),
-                             child: Text(
-                               post.content,
-                               overflow: TextOverflow.fade,
-                               style: GoogleFonts.nanumGothic(fontSize: 12),
+                             child: Container(
+                               padding: EdgeInsets.only(top: 5),
+                               child: Text(
+                                 post.content,
+                                 maxLines: 1,
+                                 overflow: TextOverflow.fade,
+                                 style: GoogleFonts.nanumGothic(fontSize: 10),
+                               ),
                              ),
                            ),
                          ),

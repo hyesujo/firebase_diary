@@ -14,8 +14,12 @@ class ShowTags extends StatelessWidget {
     for(var i=0; i < tags.length; i++){
       text += "#${tags[i]}";
     }
-    return Text(text,style: TextStyle(color: Colors.blue,
-        fontSize: 13),
+    return Text(
+      text,
+      style: TextStyle(
+          color: Colors.blue,
+        fontSize: 13
+      ),
     );
   }
   

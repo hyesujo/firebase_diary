@@ -126,7 +126,8 @@ class SearchPostDelegate extends SearchDelegate{
              children:[
               Text('#$tag'),
               Divider(thickness: 0.2,
-              color: Colors.black45,),
+              color: Colors.black45
+              ),
              ]
          ),
         ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_3line_diary/model/post.dart';
 import 'package:flutter_3line_diary/service/database.dart';
 import 'package:flutter_3line_diary/ui/showtags.dart';
+import 'package:flutter_3line_diary/views/homePage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TopicPage extends StatefulWidget {
   @override
@@ -13,25 +15,39 @@ class _TopicPageState extends State<TopicPage> {
 
   @override
   Widget build(BuildContext context) {
+   final Color pColor = Color(0xff3EBAA9);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey[100],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => HomePage(page: 0)
+            ),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+          ),
+        ),
+        backgroundColor: Colors.deepPurple,
         elevation: 0.0,
         centerTitle: true,
         title: Text('주제별 같이',
-        style: TextStyle(
-          color: Colors.black
-        ),),
+        style: GoogleFonts.nanumGothic(
+        color: Colors.white,),
+        ),
       ),
       body: Container(
           child: Column(
             children: [
               Container(
                 padding: EdgeInsets.all(8.0),
-                child: Text('topic',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 22
+                child: Text(
+                  'topic',
+                style: GoogleFonts.nanumGothic(
+                      color: pColor,
+                      fontSize: 22,
+                  fontWeight: FontWeight.w600
                 ),
                 ),
               ),
@@ -43,6 +59,7 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   Widget showPost() {
+    Size size = MediaQuery.of(context).size;
     return FutureBuilder(
       future:  _database.listPost(),
       builder: (context, snapshot) {
@@ -50,7 +67,7 @@ class _TopicPageState extends State<TopicPage> {
           List<Post> posts = snapshot.data;
           print(posts.length);
           return Container(
-            height: 300,
+            height: size.height *0.65,
             child: ListView.builder(
               itemCount: posts.length,
                 itemBuilder: (context, index){

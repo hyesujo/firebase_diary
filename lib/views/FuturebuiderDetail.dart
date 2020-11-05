@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3line_diary/model/post.dart';
+import 'package:flutter_3line_diary/service/database.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
 
+
 class FutureBuilderDetail extends StatefulWidget {
-  Post post;
+  final Post post;
 
   FutureBuilderDetail({
     this.post
@@ -15,9 +17,39 @@ class FutureBuilderDetail extends StatefulWidget {
 }
 
 class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
+  Database database = Database();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.grey[800],
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.only(left: 10),
+              child: IconButton(
+                  icon: Icon(Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
+                  onPressed: () {
+                Navigator.of(context).pop();
+              }),
+            ),
+            Spacer(),
+            IconButton(icon: Icon(Icons.share,
+            color: Colors.white,), onPressed: () {
+              sharePost(widget.post);
+            }),
+            IconButton(icon: Icon(Icons.more_vert,
+            color: Colors.white,),
+                onPressed: () {
+              _bottomList(context);
+                }
+            ),
+          ],
+        ),
+      ),
       body: Container(
         child: Column(
           children: [
@@ -34,20 +66,6 @@ class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
           Flexible(
             child: Container(),
           ),
-          Container(
-            width: double.maxFinite,
-            alignment: Alignment.centerRight,
-            margin: EdgeInsets.only(right: 12),
-            child: IconButton(
-              onPressed: () {
-                sharePost(widget.post);
-              },
-              icon: Icon(
-                Icons.share,
-                size: 36,
-              ),
-            ),
-          )
           ],
         ),
       ),
@@ -56,6 +74,37 @@ class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
 
   void sharePost(Post post) {
     Share.share(post.title, subject: post.content);
+  }
+  
+  void _bottomList(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext ctx) {
+          return Container(
+            child: Wrap(
+              children: [
+                ListTile(
+                  title: Text("일기 수정"),
+                ),
+                Divider(
+                  height: 10,
+                  color: Colors.grey[500],
+                  thickness: 1,
+                  indent: 15.0,
+                  endIndent: 30.0,
+                ),
+                ListTile(
+                  title: Text("일기장 삭제"),
+                  onTap: () {},
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void _onPostDeleted(Post post) {
+    Navigator.of(context);
   }
 }
 

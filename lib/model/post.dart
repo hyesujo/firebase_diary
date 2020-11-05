@@ -1,4 +1,5 @@
 class Post {
+  String id;
   String title;
   String content;
   String photoUrl;
@@ -6,6 +7,7 @@ class Post {
   List<String> tags = [];
 
   Post({
+    this.id,
     this.title,
     this.content,
     this.likes,
@@ -13,7 +15,8 @@ class Post {
     this.tags
   });
 
-  Post.fromMap(Map map) {
+  Post.fromMap(Map<String, dynamic> map) {
+    this.id = map['id'];
     this.title = map['title'];
     this.content = map['content'];
     this.photoUrl = map['photoUrl'];
@@ -21,7 +24,6 @@ class Post {
     if (map.containsKey('tags')) {
       this.tags = getTage(map['tags']);
     }
-
 
   }
 
@@ -33,6 +35,7 @@ class Post {
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = Map();
+    map['id'] = this.id;
     map['title'] = this.title;
     map['content'] = this.content;
     map['photoUrl'] = this.photoUrl;
