@@ -3,9 +3,10 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_3line_diary/service/auth_service.dart';
+import 'package:flutter_3line_diary/service/postNotifier.dart';
 import 'package:flutter_3line_diary/views/homePage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flushbar/flushbar.dart';
@@ -28,9 +29,24 @@ class _WritePageState extends State<WritePage> {
   final ImagePicker _picker = ImagePicker();
   PickedFile _imageFile;
   var uuid = Uuid();
+  Post _currentPost;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   Database database = Database();
+
+  @override
+  void initState() {
+    PostNotifier postNotifier =
+    Provider.of<PostNotifier>(context, listen: false);
+
+    if(postNotifier.currentPost != null) {
+      _currentPost = postNotifier.currentPost;
+    } else {
+      _currentPost = Post();
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +83,10 @@ class _WritePageState extends State<WritePage> {
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 12),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: 12),
                   child: TextFormField(
+                    initialValue: _currentPost.title,
                     controller: _titleCtrl,
                     minLines: 2,
                     maxLines: 5,
@@ -80,6 +98,7 @@ class _WritePageState extends State<WritePage> {
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 12),
                   child: TextFormField(
+                    initialValue: _currentPost.content,
                     controller: _contentCtrl,
                     minLines: 3,
                     maxLines: 5,
@@ -132,21 +151,21 @@ class _WritePageState extends State<WritePage> {
 
   Container tagField() {
     return Container(
-                margin: EdgeInsets.symmetric(horizontal: 12),
-                child: TextFormField(
-                  controller: _tagCtrl,
-                  decoration: InputDecoration(
-                      hintText: '#당신의 삶 태그를 입력해주세요',
-                      hintStyle: TextStyle(
-                          color: pColor,
-                          fontWeight: FontWeight.w300
-                      ),
-                  ),
-                  onChanged: (value){
-                    print(value);
-                  },
-                ),
-              );
+      margin: EdgeInsets.symmetric(horizontal: 12),
+      child: TextFormField(
+        controller: _tagCtrl,
+        decoration: InputDecoration(
+          hintText: '#당신의 삶 태그를 입력해주세요',
+          hintStyle: TextStyle(
+              color: pColor,
+              fontWeight: FontWeight.w300
+          ),
+        ),
+        onChanged: (value){
+          print(value);
+          },
+      ),
+    );
   }
 
   Column infoMessage() {

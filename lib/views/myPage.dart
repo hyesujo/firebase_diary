@@ -20,30 +20,6 @@ class _MyPageState extends State<MyPage> {
   );
   AuthService authService = AuthService();
 
-  //
-  // MethodChannel methodChannel = MethodChannel('dev/flutter.io');
-  //
-  // void callMethod() async {
-  //  var result = await methodChannel.invokeListMethod('add');
-  //  print(result);
-  // }
-
-  // void getUser() async {
-  //   Map user = await authService.getUser();
-  //   print(user);
-  //
-  //
-  //   // if(user.containsKey('email')) {
-  //   //   myuser.email = user['email'] ?? 'email';
-  //   // }
-  //
-  //   myuser.name =user['name'] ?? 'name';
-  //
-  //   setState(() {
-  //     myuser;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
 
@@ -160,3 +136,28 @@ class _MyPageState extends State<MyPage> {
     );
   }
 }
+
+
+//
+// MethodChannel methodChannel = MethodChannel('dev/flutter.io');
+//
+// void callMethod() async {
+//  var result = await methodChannel.invokeListMethod('add');
+//  print(result);
+// }
+
+// void getUser() async {
+//   Map user = await authService.getUser();
+//   print(user);
+//
+//
+//   // if(user.containsKey('email')) {
+//   //   myuser.email = user['email'] ?? 'email';
+//   // }
+//
+//   myuser.name =user['name'] ?? 'name';
+//
+//   setState(() {
+//     myuser;
+//   });
+// }

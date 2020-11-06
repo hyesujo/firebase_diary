@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3line_diary/model/post.dart';
-import 'package:flutter_3line_diary/service/database.dart';
+import 'package:flutter_3line_diary/service/postNotifier.dart';
+import 'package:flutter_3line_diary/views/writePage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 
-class FutureBuilderDetail extends StatefulWidget {
-  final Post post;
-
-  FutureBuilderDetail({
-    this.post
-  });
-
-  @override
-  _FutureBuilderDetailState createState() => _FutureBuilderDetailState();
-}
-
-class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
-  Database database = Database();
+class PostDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PostNotifier postNotifier = Provider.of<PostNotifier>(context, listen: false);
     return Scaffold(
       bottomNavigationBar: BottomAppBar(
         color: Colors.grey[800],
@@ -29,7 +20,8 @@ class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
             Container(
               padding: EdgeInsets.only(left: 10),
               child: IconButton(
-                  icon: Icon(Icons.arrow_back_ios,
+                  icon: Icon(
+                    Icons.arrow_back_ios,
                 color: Colors.white,
               ),
                   onPressed: () {
@@ -37,11 +29,14 @@ class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
               }),
             ),
             Spacer(),
-            IconButton(icon: Icon(Icons.share,
-            color: Colors.white,), onPressed: () {
-              sharePost(widget.post);
+            IconButton(
+                icon: Icon(Icons.share,
+            color: Colors.white
+            ), onPressed: () {
+              sharePost(postNotifier.currentPost);
             }),
-            IconButton(icon: Icon(Icons.more_vert,
+            IconButton(icon: Icon(
+              Icons.more_vert,
             color: Colors.white,),
                 onPressed: () {
               _bottomList(context);
@@ -54,13 +49,13 @@ class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
         child: Column(
           children: [
             Image.network(
-              widget.post.photoUrl,
+             postNotifier.currentPost.photoUrl,
               width: double.infinity,
               height: 400,
               fit: BoxFit.fitWidth,
             ),
             Text(
-              widget.post.content,
+              postNotifier.currentPost.content,
               style: GoogleFonts.nanumGothic(fontSize: 14, height: 1.5),
             ),
           Flexible(
@@ -72,11 +67,14 @@ class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
     );
   }
 
+
   void sharePost(Post post) {
     Share.share(post.title, subject: post.content);
   }
-  
+
+
   void _bottomList(BuildContext context) {
+    PostNotifier postNotifier = Provider.of(context, listen: false);
     showModalBottomSheet(
         context: context,
         builder: (BuildContext ctx) {
@@ -84,6 +82,12 @@ class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
             child: Wrap(
               children: [
                 ListTile(
+                  onTap: () {
+                    postNotifier.currentPost = null;
+                    Navigator.of(context).push(
+                        MaterialPageRoute(
+                        builder: (BuildContext context) => WritePage()));
+                  },
                   title: Text("일기 수정"),
                 ),
                 Divider(
@@ -95,7 +99,7 @@ class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
                 ),
                 ListTile(
                   title: Text("일기장 삭제"),
-                  onTap: () {},
+                  // onTap: () => database.deletePost(, postDeleted)
                 ),
               ],
             ),
@@ -103,8 +107,6 @@ class _FutureBuilderDetailState extends State<FutureBuilderDetail> {
         });
   }
 
-  void _onPostDeleted(Post post) {
-    Navigator.of(context);
-  }
+
 }
 

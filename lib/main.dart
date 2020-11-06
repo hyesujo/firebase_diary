@@ -1,35 +1,41 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/gestures.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_3line_diary/service/joinOrLogin.dart';
+import 'package:flutter_3line_diary/service/postNotifier.dart';
 import 'package:flutter_3line_diary/views/LoginPage.dart';
 
 import 'package:provider/provider.dart';
 
-
 void main() async {
- WidgetsFlutterBinding.ensureInitialized();
- await Firebase.initializeApp();
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  GestureBinding.instance.resamplingEnabled = true;
+  await Firebase.initializeApp();
+  runApp(
+    MultiProvider(
+        providers: [
+      ChangeNotifierProvider(
+        create: (context) => PostNotifier(),
+      ),
+      ChangeNotifierProvider<JoinOrLogin>(
+        create: (context) => JoinOrLogin(),
+      ),
+    ], child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<JoinOrLogin>.value(
-      value: JoinOrLogin(), //value값을 인스턴스화 한다.
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch:Colors.blue,
-          visualDensity:VisualDensity.adaptivePlatformDensity,
-        ),
-        home: LoginPage(),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      home: LoginPage(),
     );
   }
 }
-
-

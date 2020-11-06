@@ -1,7 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_3line_diary/service/auth_service.dart';
 import 'package:flutter_3line_diary/service/joinOrLogin.dart';
 import 'package:flutter_3line_diary/ui/LoginBackGround.dart';
 import 'package:flutter_3line_diary/ui/loginBackTwo.dart';
@@ -13,7 +12,7 @@ class LoginPage extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emCtrl = TextEditingController();
   final TextEditingController _pwCtrl = TextEditingController();
-  AuthService authService = AuthService();
+
 
 
   @override
@@ -36,7 +35,7 @@ class LoginPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _loginImage,
+              _loginImage, //이렇게 쓰려면 get을 하면됨(간단한 사용 =>)
               Stack(
                 children: [
                   _inputForm(size),
@@ -110,10 +109,11 @@ class LoginPage extends StatelessWidget {
 
   void _login(BuildContext context) async {
     try{
-      final UserCredential logincCredential = await FirebaseAuth.instance
+      final UserCredential loginCredential = await FirebaseAuth.instance
       .signInWithEmailAndPassword(
-          email: _emCtrl.text, password: _pwCtrl.text);
-      final User user = logincCredential.user;
+          email: _emCtrl.text,
+          password: _pwCtrl.text);
+      final User user = loginCredential.user;
       if(user ==null) {
         final SnackBar snackBar = SnackBar(
             content: Text("다시 시도해 주세요!"));
@@ -124,7 +124,8 @@ class LoginPage extends StatelessWidget {
     }
     Navigator.of(context).push(MaterialPageRoute(
         builder: (content)=>HomePage(page: 0)
-    ));
+    ),
+    );
   }
 
   Widget get _loginImage => Expanded(
@@ -215,7 +216,7 @@ class LoginPage extends StatelessWidget {
                       opacity: joinOrLogin.isJoin ? 0:1,
                         child: GestureDetector(
                           onTap: joinOrLogin.isJoin ? null :(){
-                            ForgetPw(context);
+                            forgetPw(context);
                           },
                             child: Text(
                                 "비밀번호를 잊었어요!"
@@ -235,7 +236,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
- Function ForgetPw(BuildContext context) {
+ Function forgetPw(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ForgetPassword()));
   }

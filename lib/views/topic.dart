@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_3line_diary/model/post.dart';
 import 'package:flutter_3line_diary/service/database.dart';
+import 'package:flutter_3line_diary/service/postNotifier.dart';
 import 'package:flutter_3line_diary/ui/showtags.dart';
 import 'package:flutter_3line_diary/views/homePage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class TopicPage extends StatefulWidget {
   @override
@@ -59,24 +61,24 @@ class _TopicPageState extends State<TopicPage> {
   }
 
   Widget showPost() {
+    PostNotifier postNotifier = Provider.of<PostNotifier>(context);
     Size size = MediaQuery.of(context).size;
     return FutureBuilder(
       future:  _database.listPost(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Post> posts = snapshot.data;
-          print(posts.length);
+          print(postNotifier.postList.length);
           return Container(
             height: size.height *0.65,
             child: ListView.builder(
-              itemCount: posts.length,
+              itemCount: postNotifier.postList.length,
                 itemBuilder: (context, index){
-                  Post post = posts[index];
                   return Container(
                     margin: EdgeInsets.all(5),
                     child: ListTile(
                       leading: Image.network(
-                          post.photoUrl,
+                          postNotifier.postList[index].photoUrl,
                         fit: BoxFit.cover,
                         width: 100,
                         height: 100,
@@ -84,11 +86,11 @@ class _TopicPageState extends State<TopicPage> {
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                    Text(post.title),
+                    Text(postNotifier.postList[index].title),
                       SizedBox(
                         height: 5,
                       ),
-                      ShowTags(post.tags)
+                      ShowTags(postNotifier.postList[index].tags)
                       ],
                       )
                     ),
