@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_3line_diary/model/post.dart';
 import 'package:flutter_3line_diary/service/postNotifier.dart';
 
 class Database {
+
   FirebaseFirestore _db = FirebaseFirestore.instance;
-
-
 
   Future<List<Post>> listPost() async{
   QuerySnapshot snapshot =
@@ -35,6 +35,7 @@ class Database {
   }
 
   Future deletePost(Post post, Function postDeleted) async {
+    FirebaseAuth _auth = FirebaseAuth.instance;
     if(post.photoUrl != null) {
       StorageReference storageReference =
       await FirebaseStorage.instance
@@ -47,21 +48,32 @@ class Database {
       }
       print('image deleted');
     }
+    try {
+      await _db.collection("posts").doc(post.docId).delete();
+     return postDeleted(post);
+    }catch(e){
+      print('doc Delete-$e');
+    }
 
-    await _db.collection("posts").doc(post.id).delete();
-    postDeleted(post);
+
   }
 
-   getPost(PostNotifier postNotifier) async {
-     QuerySnapshot snap = await _db.collection('posts').limit(40).get();
+
+  Future getPost(PostNotifier postNotifier) async {
+     QuerySnapshot snap = await _db
+         .collection('posts').limit(40).get();
 
      List<Post> _postList = [];
      
      snap.docs.forEach((document) {
-       Post post = Post.fromMap(document.data());
+       Map map = document.data();
+       map['docId'] = document.id;
+
+       Post post = Post.fromFirbase(map);
        _postList.add(post);
      });
 
-     postNotifier.postList = _postList;
+     return postNotifier.postList = _postList;
   }
 }
+

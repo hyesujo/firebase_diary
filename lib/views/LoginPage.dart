@@ -57,7 +57,8 @@ class LoginPage extends StatelessWidget {
                    "계정이 없으시면 생성하시겠어요?" ,
                     style: TextStyle(
                         color: joinOrLogin.isJoin ?
-                    Colors.deepOrange : Colors.deepPurple
+                    Colors.deepOrange
+                            : Colors.deepPurple
                     ),
                   ),
                 ),
@@ -72,7 +73,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  void _registor(BuildContext context) async {
+  void _register(BuildContext context) async {
     try {
       final UserCredential credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -153,7 +154,9 @@ class LoginPage extends StatelessWidget {
         child: Consumer<JoinOrLogin>(
           builder: (context, joinOrLogin, child) =>
               FlatButton(
-            color: joinOrLogin.isJoin?Colors.deepOrange : Colors.deepPurple,
+            color: joinOrLogin.isJoin ?
+            Colors.deepOrange
+                : Colors.deepPurple,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
@@ -168,7 +171,7 @@ class LoginPage extends StatelessWidget {
             ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
-                    joinOrLogin.isJoin ?_registor(context) : _login(context);
+                    joinOrLogin.isJoin ?_register(context) : _login(context);
                   }
                 }),
         ),
@@ -179,12 +182,15 @@ class LoginPage extends StatelessWidget {
 
   Widget _inputForm(Size size) {
     return Padding(
-      padding: EdgeInsets.all(size.width * 0.05),
+      padding: EdgeInsets.all(
+          size.width * 0.05),
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15)),
         elevation: 6,
         child: Padding(
-          padding: EdgeInsets.all(size.width * 0.02),
+          padding: EdgeInsets.all(
+              size.width * 0.02),
           child: Form(
             key: _formKey,
             child: Column(

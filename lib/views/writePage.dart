@@ -1,7 +1,5 @@
-
-
 import 'dart:io';
-
+import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_3line_diary/service/postNotifier.dart';
 import 'package:flutter_3line_diary/views/homePage.dart';
@@ -31,11 +29,12 @@ class _WritePageState extends State<WritePage> {
   var uuid = Uuid();
   Post _currentPost;
   FirebaseAuth _auth = FirebaseAuth.instance;
-
+  DateTime now = DateTime.now();
   Database database = Database();
 
   @override
   void initState() {
+    super.initState();
     PostNotifier postNotifier =
     Provider.of<PostNotifier>(context, listen: false);
 
@@ -44,8 +43,14 @@ class _WritePageState extends State<WritePage> {
     } else {
       _currentPost = Post();
     }
+  }
 
-    super.initState();
+  @override
+  void dispose() {
+    _titleCtrl?.dispose();
+    _contentCtrl?.dispose();
+    _tagCtrl?.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,19 +91,22 @@ class _WritePageState extends State<WritePage> {
                   margin: EdgeInsets.symmetric(
                       horizontal: 12),
                   child: TextFormField(
-                    initialValue: _currentPost.title,
+                    // initialValue: _currentPost.title,
                     controller: _titleCtrl,
                     minLines: 2,
                     maxLines: 5,
                     decoration: InputDecoration(
                       hintText: '제목은 두줄로 적어주세요',
                     ),
+                    onSaved: (String value) {
+                      _currentPost.title = value;
+                    },
                   ),
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 12),
                   child: TextFormField(
-                    initialValue: _currentPost.content,
+                    // initialValue: _currentPost.content,
                     controller: _contentCtrl,
                     minLines: 3,
                     maxLines: 5,
@@ -109,6 +117,8 @@ class _WritePageState extends State<WritePage> {
                             fontSize: 20
                         )
                     ),
+                    onSaved: (String value)
+                    => _currentPost.content = value,
                   ),
                 ),
                 tagField(),
@@ -120,7 +130,8 @@ class _WritePageState extends State<WritePage> {
                     color: Colors.black,
                     child: Center(
                       child: _imageFile != null ? Image.file(
-                        File(_imageFile.path),)
+                        File(_imageFile.path),
+                      )
                           : infoMessage(),
                     ),
                   ),
@@ -209,6 +220,7 @@ class _WritePageState extends State<WritePage> {
       String content = _contentCtrl.text;
       String title = _titleCtrl.text;
       String photoUrl = await upLoad();
+      String time = DateFormat('yyyy-MM-dd').format(now);
       Post post = Post(
         id: id,
         title: title,
@@ -216,6 +228,7 @@ class _WritePageState extends State<WritePage> {
         photoUrl: photoUrl,
         likes: 0,
         tags: tags,
+        time: time,
       );
       await database.addPost(post);
 
@@ -227,7 +240,7 @@ class _WritePageState extends State<WritePage> {
       Scaffold.of(context).showSnackBar(snackBar);
       Navigator.of(context).pop();
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (content)=>HomePage(page: 1),
+        MaterialPageRoute(builder: (content)=>HomePage(page: 0),
       ),
       );
   }

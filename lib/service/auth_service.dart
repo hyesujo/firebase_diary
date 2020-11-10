@@ -32,7 +32,7 @@ class AuthService {
    User user = _auth.currentUser;
 
    _auth.authStateChanges();
-   return  userDatabase.getUser(uid);
+   return userDatabase.getUser(uid);
 
  }
  login() {

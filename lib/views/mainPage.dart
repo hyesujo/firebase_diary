@@ -12,6 +12,9 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+
+  Database _database =Database();
+
   void initState() {
     super.initState();
   }
@@ -23,8 +26,6 @@ class _MainPageState extends State<MainPage> {
     super.didChangeDependencies();
   }
 
-
-  Database _database =Database();
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +65,8 @@ class _MainPageState extends State<MainPage> {
   Widget showGirdPost() {
     PostNotifier postNotifier =
     Provider.of<PostNotifier>(context, listen: false);
-      _database.getPost(postNotifier);
-    return GridView.builder(
+      // _database.getPost(postNotifier);
+      return GridView.builder(
              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                crossAxisCount: 3,
                crossAxisSpacing: 3.0,
@@ -88,18 +89,20 @@ class _MainPageState extends State<MainPage> {
                  child: Card(
                    child: Container(
                      width: 100,
-
                      height: 130,
                      color: Colors.grey[200],
                      child: Column(
                        crossAxisAlignment: CrossAxisAlignment.start,
                        children: [
-                         Image.network(
-                           postNotifier.postList[index].photoUrl,
+                         Hero(
+                           tag: postNotifier.postList[index],
+                           child: Image.network(
+                             postNotifier.postList[index].photoUrl,
                        width: 130,
                        height: 90,
                        fit: BoxFit.cover,
                      ),
+                         ),
                          Container(
                            padding: EdgeInsets.symmetric(horizontal: 8),
                            child: Container(
@@ -108,7 +111,7 @@ class _MainPageState extends State<MainPage> {
                                postNotifier.postList[index].title,
                                maxLines: 1,
                                style: GoogleFonts.nanumGothic(
-                                 fontSize: 12,
+                                 fontSize: 14,
                                  fontWeight: FontWeight.w500
                                ),
                              ),
@@ -123,7 +126,10 @@ class _MainPageState extends State<MainPage> {
                                  postNotifier.postList[index].content,
                                  maxLines: 1,
                                  overflow: TextOverflow.fade,
-                                 style: GoogleFonts.nanumGothic(fontSize: 10),
+                                 style: GoogleFonts.nanumGothic(
+                                     fontSize: 12,
+                                 fontWeight: FontWeight.w500
+                                 ),
                                ),
                              ),
                            ),
@@ -139,72 +145,3 @@ class _MainPageState extends State<MainPage> {
 }
 
 
-// Widget buildGridView({List post}) {
-  //   return GridView.count(
-  //     childAspectRatio: 0.8,
-  //     crossAxisCount: 3,
-  //     children: buildItem(post),
-  //   );
-  // }
-  //
-  // List<Widget> buildItem(List<Post> post) {
-  //   List<Widget> widgets = [];
-  //
-  //   for (int i = 0; i < post.length; i++) {
-  //     Post posts = post[i];
-  //
-  //     Widget addWidget = GestureDetector(
-  //       onTap: () {
-  //         Navigator.of(context).push(
-  //             MaterialPageRoute(
-  //           builder: (BuildContext context) =>
-  //               PostDetail(post: posts,index: i),
-  //         ),
-  //         );
-  //       },
-  //       child: Card(
-  //         child: Container(
-  //           width: 100,
-  //           height: 100,
-  //           color: Colors.black12,
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Hero(
-  //                 tag: "$i",
-  //                 child: Image.network(
-  //                   posts.photoUrl,
-  //                   width: 130,
-  //                   height: 90,
-  //                   fit: BoxFit.cover,
-  //                 ),
-  //               ),
-  //               Container(
-  //                 padding: EdgeInsets.symmetric(horizontal: 8),
-  //                 child: Text(
-  //                   posts.title,
-  //                   maxLines: 1,
-  //                   style: GoogleFonts.nanumGothic(
-  //                     fontSize: 12,
-  //                   ),
-  //                 ),
-  //               ),
-  //               Flexible(
-  //                 child: Container(
-  //                   padding: EdgeInsets.symmetric(horizontal: 8),
-  //                   child: Text(
-  //                     posts.content,
-  //                     overflow: TextOverflow.fade,
-  //                     style: GoogleFonts.nanumGothic(fontSize: 12),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //     widgets.add(addWidget);
-  //   }
-  //   return widgets;
-  // }

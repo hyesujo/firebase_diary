@@ -1,11 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_3line_diary/service/joinOrLogin.dart';
 import 'package:flutter_3line_diary/service/postNotifier.dart';
 import 'package:flutter_3line_diary/views/LoginPage.dart';
-
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -30,9 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: LoginPage(),

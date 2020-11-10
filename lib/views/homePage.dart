@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_3line_diary/model/post.dart';
 import 'package:flutter_3line_diary/views/mainPage.dart';
 import 'package:flutter_3line_diary/views/myPage.dart';
 import 'package:flutter_3line_diary/views/topic.dart';
 import 'package:flutter_3line_diary/views/writePage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+
 class HomePage extends StatefulWidget {
-
   final page;
-
+  final List<Post> favoritePost;
   HomePage({
     this.page = 0,
+    this.favoritePost,
   });
-
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -20,14 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   int _selectedIndex = 0;
-
-  List<Widget> pages = [
-    MainPage(),
-    TopicPage(),
-    WritePage(),
-    MyPage(),
-  ];
-
+  List<Widget> pages;
   @override
   void initState() {
     _selectedIndex = widget.page;
@@ -45,6 +39,12 @@ class _HomePageState extends State<HomePage> {
     );
     onTopic();
     getFCMToken();
+    pages = [
+      MainPage(),
+      TopicPage(widget.favoritePost),
+      WritePage(),
+      MyPage(),
+    ];
   }
 
   onTopic() {
@@ -56,8 +56,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   getFCMToken() async {
-    String token = await  _firebaseMessaging.getToken();
-    print('token - $token');
+    String token = await _firebaseMessaging.getToken();
   }
 
   @override
@@ -88,9 +87,8 @@ class _HomePageState extends State<HomePage> {
           selectedItemColor: Colors.deepPurple,
           unselectedItemColor: Colors.grey[500],
           currentIndex: _selectedIndex,
-          onTap :_selectTab,
-        )
-    );
+          onTap: _selectTab,
+        ));
   }
 
   _selectTab(int index) {
@@ -98,6 +96,4 @@ class _HomePageState extends State<HomePage> {
       this._selectedIndex = index;
     });
   }
-
-
 }

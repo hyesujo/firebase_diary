@@ -1,5 +1,3 @@
-
-
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
@@ -23,5 +21,10 @@ set currentPost(Post post) {
   _currentPost = post;
   notifyListeners();
 }
+
+ deletePost(Post post) {
+  _postList.removeWhere((_post) => _post.docId== post.docId);
+  notifyListeners();
+  }
 
 }

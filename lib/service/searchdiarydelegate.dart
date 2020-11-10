@@ -46,9 +46,6 @@ class SearchPostDelegate extends SearchDelegate{
    print(query);
 
    String q = query;
-
-
-
    query = '';
     return FutureBuilder(
      future: db.listPostKeyword(q),
